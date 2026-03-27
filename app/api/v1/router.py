@@ -30,8 +30,12 @@ async def create_generation_task(request: ContentRequest):
 
     result = app_graph.invoke(inputs)
 
+    final_article = (
+        result.get("final_output") or result.get("draft") or "Generation failed."
+    )
+
     return ContentResponse(
         topic=request.topic,
-        final_article=result.get("final_output", "Generation failed."),
+        final_article=final_article,
         revision_count=result.get("revision_count", 0),
     )
